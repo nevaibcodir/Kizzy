@@ -98,7 +98,7 @@ open class DiscordWebSocketImpl(
             HEARTBEAT -> sendHeartBeat()
             RECONNECT -> reconnectWebSocket()
             INVALID_SESSION -> handleInvalidSession()
-            HELLO -> payload.handleHello(jsonString)
+            HELLO -> handleHello(jsonString)
             else -> {}
         }
     }
@@ -128,7 +128,7 @@ open class DiscordWebSocketImpl(
         sendIdentify()
     }
 
-    private suspend inline fun Payload.handleHello(jsonString: String) {
+    private suspend inline fun handleHello(jsonString: String) {
         if (sequence > 0 && !sessionId.isNullOrBlank()) {
             sendResume()
         } else {

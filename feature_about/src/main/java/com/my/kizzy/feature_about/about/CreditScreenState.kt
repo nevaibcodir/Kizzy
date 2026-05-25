@@ -12,8 +12,10 @@
 
 package com.my.kizzy.feature_about.about
 
+import androidx.compose.runtime.Stable
 import com.my.kizzy.domain.model.Contributor
 
+@Stable
 sealed interface CreditScreenState {
     object Loading: CreditScreenState
     class Error(val error: String?): CreditScreenState

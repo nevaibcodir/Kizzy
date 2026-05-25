@@ -12,10 +12,12 @@
 
 package com.my.kizzy.domain.model.user
 
+import androidx.compose.runtime.Immutable
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+@Immutable
 data class User(
     @SerialName("bio")
     val bio: String? = "",

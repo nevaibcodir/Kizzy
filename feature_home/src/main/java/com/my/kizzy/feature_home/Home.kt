@@ -13,6 +13,7 @@
 package com.my.kizzy.feature_home
 
 import android.content.ComponentName
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -49,7 +50,6 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -88,7 +88,6 @@ fun Home(
     showBadge: Boolean,
     features: List<HomeFeature>,
     user: User?,
-    componentName: ComponentName? = null,
     navigateToProfile: () -> Unit,
     navigateToStyleAndAppearance: () -> Unit,
     navigateToLanguages: () -> Unit,
@@ -97,8 +96,7 @@ fun Home(
     navigateToLogsScreen: () -> Unit,
 ) {
     val ctx = LocalContext.current
-    var timestamp by remember { mutableLongStateOf(System.currentTimeMillis()) }
-    var homeItems by remember(timestamp) {
+    var homeItems by remember {
         mutableStateOf(features)
     }
     var showUpdateDialog by remember {
@@ -112,14 +110,9 @@ fun Home(
             canScroll = { true })
     val isCollapsed = scrollBehavior.state.collapsedFraction > 0.55f
 
-    // Refresh home screen in case user turns off service from notification/Quickie
     OnLifecycleEvent { _, event ->
-        when (event) {
-            Lifecycle.Event.ON_RESUME -> {
-                timestamp = System.currentTimeMillis()
-            }
-
-            else -> {}
+        if (event == Lifecycle.Event.ON_RESUME) {
+            homeItems = features
         }
     }
 
@@ -127,19 +120,28 @@ fun Home(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(modifier = Modifier.width(300.dp)) {
-                if (componentName != null) {
-                    SettingsDrawer(
-                        user = user,
-                        showKizzyQuickieRequestItem = !KizzyTileService.tileAdded.value,
-                        componentName = componentName,
-                        navigateToProfile = navigateToProfile,
-                        navigateToStyleAndAppearance = navigateToStyleAndAppearance,
-                        navigateToLanguages = navigateToLanguages,
-                        navigateToAbout = navigateToAbout,
-                        navigateToRpcSettings = navigateToRpcSettings,
-                        navigateToLogsScreen = navigateToLogsScreen
-                    )
-                }
+                SettingsDrawer(
+                    user = user,
+                    showKizzyQuickieRequestItem = !KizzyTileService.tileAdded.value,
+                    onRequestAddTile = {
+                        val cn = ComponentName(ctx, KizzyTileService::class.java)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            val sbm = ctx.getSystemService(android.app.StatusBarManager::class.java)
+                            sbm.requestAddTileService(
+                                    cn,
+                                    ctx.getString(R.string.qs_tile_label),
+                                    android.graphics.drawable.Icon.createWithResource(ctx, R.drawable.ic_tile_play),
+                                    {}
+                            ) {}
+                        }
+                    },
+                    navigateToProfile = navigateToProfile,
+                    navigateToStyleAndAppearance = navigateToStyleAndAppearance,
+                    navigateToLanguages = navigateToLanguages,
+                    navigateToAbout = navigateToAbout,
+                    navigateToRpcSettings = navigateToRpcSettings,
+                    navigateToLogsScreen = navigateToLogsScreen
+                )
             }
         }) {
         Scaffold(

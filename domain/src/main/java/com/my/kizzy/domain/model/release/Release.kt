@@ -14,9 +14,11 @@ package com.my.kizzy.domain.model.release
 
 
 import kotlinx.serialization.SerialName
+import androidx.compose.runtime.Immutable
 import kotlinx.serialization.Serializable
 
 @Serializable
+@Immutable
 data class Release(
     @SerialName("url")
     val url: String? = null,

@@ -12,8 +12,10 @@
 
 package xyz.dead8309.feature_experimental_rpc
 
+import androidx.compose.runtime.Immutable
 import com.my.kizzy.data.utils.AppsInfo
 
+@Immutable
 data class UiState(
     val isLoading: Boolean = false,
     val error: String? = null,

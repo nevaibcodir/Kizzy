@@ -13,7 +13,6 @@
 package com.my.kizzy
 
 import android.annotation.SuppressLint
-import android.content.ComponentName
 import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -25,7 +24,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.my.kizzy.domain.model.toVersion
@@ -49,7 +47,6 @@ import com.my.kizzy.feature_profile.ui.login.LoginScreen
 import com.my.kizzy.feature_profile.ui.user.UserScreen
 import com.my.kizzy.feature_profile.ui.user.UserViewModel
 import com.my.kizzy.feature_rpc_base.AppUtils
-import com.my.kizzy.feature_rpc_base.services.KizzyTileService
 import com.my.kizzy.feature_settings.language.Language
 import com.my.kizzy.feature_settings.rpc_settings.RpcSettings
 import com.my.kizzy.feature_settings.style.Appearance
@@ -98,7 +95,6 @@ internal fun ComponentActivity.Kizzy(
             animatedComposable(Routes.HOME) {
                 val release = Prefs.getSavedLatestRelease()
                 val user = Prefs.getUser()
-                val ctx = LocalContext.current
                 val viewModel by viewModels<HomeScreenViewModel>()
                 val state = viewModel.aboutScreenState.collectAsState().value
                 val showBadge = release
@@ -122,7 +118,6 @@ internal fun ComponentActivity.Kizzy(
                         userVerified = user?.verified == true
                     ),
                     user = user,
-                    componentName = ComponentName(ctx, KizzyTileService::class.java),
                     navigateToProfile = {
                         navController.navigate(Routes.PROFILE)
                     },
@@ -263,7 +258,8 @@ internal fun ComponentActivity.Kizzy(
             animatedComposable(Routes.EXPERIMENTAL_RPC_APPS) {
                 ExperimentalRpcAppsScreen(
                     onBackPressed = { navController.popBackStack() },
-                    viewModel = experimentalRpcViewModel.value
+                    state = experimentalRpcViewModel.value.uiState.collectAsState().value,
+                    onEvent = experimentalRpcViewModel.value::onEvent,
                 )
             }
         }

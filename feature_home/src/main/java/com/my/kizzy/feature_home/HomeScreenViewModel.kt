@@ -12,6 +12,7 @@
 
 package com.my.kizzy.feature_home
 
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.my.kizzy.domain.model.Resource
@@ -55,8 +56,12 @@ class HomeScreenViewModel @Inject constructor(
     }
 }
 
+@Stable
 sealed interface HomeScreenState {
+    @Stable
     object Loading: HomeScreenState
+    @Stable
     class Error(val error: String?): HomeScreenState
+    @Stable
     class LoadingCompleted(val release: Release): HomeScreenState
 }

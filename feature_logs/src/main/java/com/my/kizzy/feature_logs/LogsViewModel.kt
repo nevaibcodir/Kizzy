@@ -12,13 +12,14 @@
 
 package com.my.kizzy.feature_logs
 
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import com.my.kizzy.domain.model.logs.LogEvent
 import com.my.kizzy.feature_logs.LoggerProvider.logger
 import com.my.kizzy.preference.Prefs
 
+@Stable
 class LogsViewModel: ViewModel() {
     val filterStrings = mutableStateOf("")
     var logs = logger.getLogs()

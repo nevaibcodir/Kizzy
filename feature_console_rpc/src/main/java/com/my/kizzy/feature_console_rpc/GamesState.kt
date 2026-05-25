@@ -12,8 +12,10 @@
 
 package com.my.kizzy.feature_console_rpc
 
+import androidx.compose.runtime.Stable
 import com.my.kizzy.domain.model.Game
 
+@Stable
 sealed interface GamesState {
     object Loading: GamesState
     class Success(val games: List<Game>): GamesState

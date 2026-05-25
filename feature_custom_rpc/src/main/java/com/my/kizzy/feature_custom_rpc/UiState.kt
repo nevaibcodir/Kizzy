@@ -12,8 +12,10 @@
 
 package com.my.kizzy.feature_custom_rpc
 
+import androidx.compose.runtime.Immutable
 import com.my.kizzy.domain.model.rpc.RpcConfig
 
+@Immutable
 data class UiState(
     val activityTypeIsExpanded: Boolean = false,
     val showBottomSheet: Boolean = false,

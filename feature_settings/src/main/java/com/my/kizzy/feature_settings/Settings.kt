@@ -1,26 +1,47 @@
 package com.my.kizzy.feature_settings
 
-import android.app.StatusBarManager
-import android.content.ComponentName
-import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.HelpOutline
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.BugReport
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Language
+import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,7 +64,7 @@ import com.my.kizzy.ui.components.chips
 fun SettingsDrawer(
     user: User?,
     showKizzyQuickieRequestItem: Boolean,
-    componentName: ComponentName,
+    onRequestAddTile: () -> Unit,
     navigateToProfile: () -> Unit,
     navigateToStyleAndAppearance: () -> Unit,
     navigateToLanguages: () -> Unit,
@@ -150,7 +171,7 @@ fun SettingsDrawer(
                 item {
                     RequestQsTile(
                         visible = showKizzyQuickieRequestItem,
-                        componentName = componentName
+                        onRequestAddTile = onRequestAddTile
                     )
                 }
             }
@@ -164,27 +185,18 @@ fun SettingsDrawer(
 @Composable
 fun RequestQsTile(
     visible: Boolean = true,
-    componentName: ComponentName,
+    onRequestAddTile: () -> Unit,
 ) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
-    val ctx = LocalContext.current
-    val label = stringResource(R.string.qs_tile_label)
-    val statusBarManager: StatusBarManager = ctx.getSystemService(StatusBarManager::class.java)
     AnimatedVisibility(
         visible = visible,
         exit = fadeOut(tween(800))
     ) {
         SettingsItemCard(
-            title = label,
+            title = stringResource(R.string.qs_tile_label),
             icon = Icons.Outlined.Star,
             selected = true,
         ) {
-            statusBarManager.requestAddTileService(
-                componentName,
-                label,
-                android.graphics.drawable.Icon.createWithResource(ctx, R.drawable.ic_tile_play),
-                {},
-            ) {}
+            onRequestAddTile()
         }
     }
 }
@@ -290,13 +302,14 @@ fun SettingsDrawerPreview() {
     ) {
         SettingsDrawer(
             showKizzyQuickieRequestItem = false,
-            componentName = ComponentName("", ""),
+            onRequestAddTile = {},
             user = null,
             navigateToProfile = {},
             navigateToStyleAndAppearance = {},
             navigateToLanguages = {},
             navigateToAbout = {},
-            navigateToRpcSettings = {}
-        ) {}
+            navigateToRpcSettings = {},
+            navigateToLogsScreen = {}
+        )
     }
 }

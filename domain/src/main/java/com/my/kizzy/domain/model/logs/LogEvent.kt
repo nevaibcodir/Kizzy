@@ -12,9 +12,12 @@
 
 package com.my.kizzy.domain.model.logs
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class LogEvent(
-    var level: LogLevel,
-    var tag: String,
-    var text: String,
+    val level: LogLevel,
+    val tag: String,
+    val text: String,
     val createdAt: Long
 )

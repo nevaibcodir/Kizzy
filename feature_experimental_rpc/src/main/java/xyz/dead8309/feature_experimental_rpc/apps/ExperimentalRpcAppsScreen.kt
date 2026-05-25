@@ -54,7 +54,6 @@ import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -78,7 +77,6 @@ import com.my.kizzy.resources.R
 import com.my.kizzy.ui.components.BackButton
 import com.my.kizzy.ui.components.KSwitch
 import com.my.kizzy.ui.components.SearchBar
-import xyz.dead8309.feature_experimental_rpc.ExperimentalRpcViewmodel
 import xyz.dead8309.feature_experimental_rpc.UiEvent
 import xyz.dead8309.feature_experimental_rpc.UiState
 
@@ -125,9 +123,8 @@ private fun getActivityTypeColor(type: String): Color {
 @Composable
 fun ExperimentalRpcAppsScreen(
     onBackPressed: () -> Unit,
-    viewModel: ExperimentalRpcViewmodel,
-    state: UiState = viewModel.uiState.collectAsState().value,
-    onEvent: (UiEvent) -> Unit = viewModel::onEvent,
+    state: UiState,
+    onEvent: (UiEvent) -> Unit,
 ) {
     var searchText by remember { mutableStateOf("") }
     var isSearchBarVisible by remember { mutableStateOf(false) }

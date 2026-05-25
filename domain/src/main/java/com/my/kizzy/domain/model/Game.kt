@@ -24,6 +24,9 @@
 
 package com.my.kizzy.domain.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class Game(
     val platform: String,
     val small_image: String,
