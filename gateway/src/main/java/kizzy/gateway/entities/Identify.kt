@@ -16,14 +16,18 @@ data class Identify(
     val token: String
 ){
     companion object {
-        fun String.toIdentifyPayload() = Identify(
+        fun String.toIdentifyPayload(
+            browser: String = "Discord Client",
+            os: String = "Windows",
+            device: String = "ktor"
+        ) = Identify(
             capabilities = 65,
             compress = false,
             largeThreshold = 100,
             properties = Properties(
-                browser = "Discord Client",
-                device = "ktor",
-                os = "Windows"
+                browser = browser,
+                device = device,
+                os = os
             ),
             token = this
         )

@@ -62,4 +62,37 @@ object Constants {
         "Samsung" to "samsung",
         "Xbox" to "xbox",
     )
+
+    /**
+     * Platform-indicator spoofing options (label -> id), ported from Equicord's
+     * platformSpoofer plugin. The selected id drives the gateway IDENTIFY
+     * "browser" property, which is what platform-indicator plugins read.
+     * An empty id means "do not spoof" (default Discord Client / desktop).
+     */
+    val SPOOF_PLATFORMS = linkedMapOf(
+        "None (Desktop)" to "",
+        "Desktop" to "desktop",
+        "Web" to "web",
+        "Android" to "android",
+        "iOS" to "ios",
+        "Xbox" to "xbox",
+        "Playstation" to "playstation",
+        "VR" to "vr",
+    )
+
+    /**
+     * Maps a spoof platform id to the gateway IDENTIFY connection properties
+     * (browser / os / device). Mirrors Equicord's getPlatform browser mapping,
+     * with os/device tuned so mobile ids register as a mobile client status.
+     */
+    fun spoofIdentifyProperties(platform: String): Triple<String, String, String> = when (platform) {
+        "desktop" -> Triple("Discord Client", "Windows", "ktor")
+        "web" -> Triple("Discord Web", "Windows", "ktor")
+        "android" -> Triple("Discord Android", "Android", "Discord Android")
+        "ios" -> Triple("Discord iOS", "iOS", "Discord iOS")
+        "xbox" -> Triple("Discord Embedded", "Windows", "ktor")
+        "playstation" -> Triple("Discord Embedded", "Windows", "ktor")
+        "vr" -> Triple("Discord VR", "Windows", "ktor")
+        else -> Triple("Discord Client", "Windows", "ktor")
+    }
 }

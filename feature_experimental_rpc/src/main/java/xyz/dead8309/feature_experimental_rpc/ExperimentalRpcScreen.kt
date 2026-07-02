@@ -325,7 +325,7 @@ fun ExperimentalRpcScreen(
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Constants.ACTIVITY_PLATFORMS.forEach { (label, value) ->
+                                Constants.SPOOF_PLATFORMS.forEach { (label, value) ->
                                     DropdownMenuItem(
                                         text = { Text(text = label) },
                                         onClick = { onEvent(UiEvent.SetPlatform(value)) },

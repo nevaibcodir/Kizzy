@@ -25,7 +25,10 @@ import kotlin.time.Duration.Companion.milliseconds
 
 open class DiscordWebSocketImpl(
     private val token: String,
-    private val logger: Logger = NoOpLogger
+    private val logger: Logger = NoOpLogger,
+    private val identifyBrowser: String = "Discord Client",
+    private val identifyOs: String = "Windows",
+    private val identifyDevice: String = "ktor"
 ) : DiscordWebSocket {
     private val gatewayUrl = "wss://gateway.discord.gg/?v=10&encoding=json"
     private var websocket: DefaultClientWebSocketSession? = null
@@ -168,7 +171,11 @@ open class DiscordWebSocketImpl(
         logger.i("Gateway","Sending $IDENTIFY")
         send(
             op = IDENTIFY,
-            d = token.toIdentifyPayload()
+            d = token.toIdentifyPayload(
+                browser = identifyBrowser,
+                os = identifyOs,
+                device = identifyDevice
+            )
         )
     }
 
